@@ -21,16 +21,12 @@
     "name": "Gabriel Laboy",
     "email": "glaboy@umass.edu"
   },
-  "contributors": [
-
-  ],
+  "contributors": [],
   "scripts": {
     "start": "http-server src/frontend -p 3000 -c-1 -o -s"
   },
   "dependencies": {
+    "express": "^4.19.2",
     "http-server": "^14.1.1"
-  },
-  "devDependencies": {
-
   }
 }
