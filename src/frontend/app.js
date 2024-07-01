@@ -223,7 +223,6 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(response => response.json())
         .then(data => {
             const animeList = data.data.Page.media;
-            // console.log(animeList)
             displayTopAiringAnime(animeList);
         })
         .catch(error => {
@@ -274,7 +273,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function displayTopAiringAnime(animeList) {
         const animeSection = document.getElementById("cardSectionTwo");
         animeSection.innerHTML = ''; // Clear previous content
-        console.log("TopAiring: "+animeList)
         animeList.slice(0, 6).forEach(anime => {
             const animeCard = document.createElement("div");
             animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4"; // Adjust the classes as needed
@@ -389,7 +387,6 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(response => response.json())
         .then(data => {
             const animeList = data.data.Page.media;
-            console.log("Fetched Anime List: ", animeList);
             displayTopPopularAllTimeAnime(animeList);
         })
         .catch(error => {
