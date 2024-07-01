@@ -228,3 +228,6 @@ select, option{
     color: white;
     text-align: center;
 }
+.card-text{
+    color: white;
+}

@@ -1,14 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
     function navigate(viewId) {
       // Hide all views
-    document.querySelectorAll(".view").forEach((view) => {
-    view.style.display = "none";
-    });
+        document.querySelectorAll(".view").forEach((view) => {
+        view.style.display = "none";
+        });
 
-    // Show the requested view
-    document.getElementById(viewId).style.display = "block";
+        // Show the requested view
+        document.getElementById(viewId).style.display = "block";
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (viewId !== 'animeDetailView2') {
+            clearAnimeDetailView(); // Clear the video when leaving animeDetailView
+        }
     }
 
     document
@@ -57,10 +60,6 @@ document.addEventListener("DOMContentLoaded", () => {
         .getElementById("signUpGo")
         .addEventListener("click", () => navigate("accountView"));
 
-    document.getElementById("animeCardLink").addEventListener("click", (event) => {
-        event.preventDefault(); // Prevent default anchor tag behavior
-        navigate("bookmarkView");
-    });
     // document.getElementById("bookmarkCardIcon").addEventListener("click", (event) => {
     //     event.preventDefault(); // Prevent default anchor tag behavior
     //     console.log(event.target.parentNode.parentNode.parentNode.firstElementChild.innerHTML)
@@ -81,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function fetchAnimeData(searchQuery) {
         try {
-            const response = await fetch(`https://graphql.anilist.co`, {
+            const response = await fetch('http://localhost:3260/api/anilist', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -89,61 +88,83 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 body: JSON.stringify({
                     query: `
-                        query ($search: String) {
-                            Media(search: $search, type: ANIME) {
-                                id
-                                title {
-                                    romaji
-                                }
-                                description
-                                coverImage {
-                                    large
-                                }
+                        query ($id: Int, $page: Int, $perPage: Int, $search: String) {
+                        Page (page: $page, perPage: $perPage) {
+                            pageInfo {
+                            total
+                            currentPage
+                            lastPage
+                            hasNextPage
+                            perPage
+                            }
+                            media (id: $id, search: $search type: ANIME) {
+                            id
+                            title {
+                                romaji
+                            }
+                            coverImage{
+                                large
+                            }
                             }
                         }
-                    `,
-                    variables: { search: searchQuery },
+                        }
+                        `,
+                    variables: { 
+                        search: searchQuery ,
+                        page: 1,
+                        perPage: 25
+                    },
                 }),
             });
             const data = await response.json();
-            return data.data.Media;
+            console.log(data.data.Page.media)
+            return data.data.Page.media;
         } catch (error) {
             console.error('Error fetching data:', error);
             return null;
         }
     }
     // Function to display search results in the results view
-    function displaySearchResults(results) {
-        const searchResultsContainer = document.getElementById('searchResultsContainer');
-        
-        // Check if searchResultsContainer exists
-        if (!searchResultsContainer) {
-            console.error("Element with ID 'searchResultsContainer' not found.");
-            return;
-        }
+    function displaySearchResults(animeList) {
+        const searchResultsContainer = document.getElementById("searchResultsContainer");
+        searchResultsContainer.innerHTML = ''; // Clear previous content
 
-        // Clear previous results
-        searchResultsContainer.innerHTML = '';
-
-        // Check if results is an object and has the data we need
-        if (!results || !results.coverImage || !results.coverImage.large) {
-            console.error('Results is not in the expected format:', results);
-            return;
-        }
-
-        // Create a card for the single result
-        const card = document.createElement('div');
-        card.classList.add('col');
-        card.innerHTML = `
-            <div class="card" id="searchedCard">
-                <img src="${results.coverImage.large}" class="card-img-top" alt="${results.title.romaji}">
-                <div class="card-body">
-                    <h5 class="card-title">${results.title.romaji}</h5>
-                    <p class="card-text">${results.description}</p>
+        animeList.forEach(anime => {
+            const animeCard = document.createElement("div");
+            animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4"; // Adjust the classes as needed
+            animeCard.innerHTML = `
+                <div class="card">
+                    <a href="" id="imageButton">
+                        <img src="${anime.coverImage.large}" class="card-img-top" alt="${anime.title.romaji}">
+                    </a>
+                    <div class="bg-dark">
+                        <div class="animeFooter">
+                            <h3 class="animeName">${anime.title.romaji}</h3>
+                            <div class="bookmark-icon">
+                                <a href="" id="bookmarkCardIcon" data-anime-id="${anime.id}">
+                                    <i class="bi bi-file-plus"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        `;
-        searchResultsContainer.appendChild(card);
+            `;
+            searchResultsContainer.appendChild(animeCard);
+
+            const bookmarkButton = animeCard.querySelector('#bookmarkCardIcon');
+            bookmarkButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                toggleBookmark(anime.id);
+                bookmarkedID();
+            });
+
+            const imageButton = animeCard.querySelector('#imageButton');
+            imageButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                fetchAnimeDetail(anime.id);
+                navigate('animeDetailView');
+            });
+        });
 
         // Navigate to the search results view
         navigate('searchResultsView');
@@ -191,7 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         `;
 
-        fetch('https://graphql.anilist.co', {
+        fetch('http://localhost:3260/api/anilist', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -228,7 +249,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         `;
 
-        fetch('https://graphql.anilist.co', {
+        fetch('http://localhost:3260/api/anilist', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -258,7 +279,7 @@ document.addEventListener("DOMContentLoaded", () => {
             animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4"; // Adjust the classes as needed
             animeCard.innerHTML = `
                 <div class="card">
-                    <a href="">
+                    <a href="" id="imageButton">
                         <img src="${anime.coverImage.large}" class="card-img-top" alt="${anime.title.romaji}">
                     </a>
                     <div class="bg-dark">
@@ -281,6 +302,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 toggleBookmark(anime.id);
                 bookmarkedID();
             });
+
+            const imageButton = animeCard.querySelector('#imageButton');
+            imageButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                console.log("animeButton clicked")
+
+                fetchAnimeDetail(anime.id);
+                navigate('animeDetailView');
+            })
 
         });
     }
@@ -294,7 +324,7 @@ document.addEventListener("DOMContentLoaded", () => {
             animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4"; // Adjust the classes as needed
             animeCard.innerHTML = `
                 <div class="card">
-                    <a href="">
+                    <a href="" id="imageButton">
                         <img src="${anime.coverImage.large}" class="card-img-top" alt="${anime.title.romaji}">
                     </a>
                     <div class="bg-dark">
@@ -317,6 +347,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 toggleBookmark(anime.id);
                 bookmarkedID();
             });
+
+            const imageButton = animeCard.querySelector('#imageButton');
+            imageButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                console.log("animeButton clicked")
+
+                fetchAnimeDetail(anime.id);
+                navigate('animeDetailView');
+            })
         });
     }
 
@@ -338,7 +377,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         `;
 
-        fetch('https://graphql.anilist.co', {
+        fetch('http://localhost:3260/api/anilist', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -366,7 +405,7 @@ document.addEventListener("DOMContentLoaded", () => {
             animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4"; // Adjust the classes as needed
             animeCard.innerHTML = `
                 <div class="card">
-                    <a href="">
+                    <a href="" id="imageButton">
                         <img src="${anime.coverImage.large}" class="card-img-top" alt="${anime.title.romaji}">
                     </a>
                     <div class="bg-dark">
@@ -389,6 +428,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 toggleBookmark(anime.id);
                 bookmarkedID();
             });
+
+            const imageButton = animeCard.querySelector('#imageButton');
+            imageButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                console.log("animeButton clicked")
+
+                fetchAnimeDetail(anime.id);
+                navigate('animeDetailView');
+            })
         });
     }
 
@@ -402,7 +450,7 @@ document.addEventListener("DOMContentLoaded", () => {
             animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4"; // Adjust the classes as needed
             animeCard.innerHTML = `
                 <div class="card">
-                    <a href="">
+                    <a href="" id="imageButton">
                         <img src="${anime.coverImage.large}" class="card-img-top" alt="${anime.title.romaji}">
                     </a>
                     <div class="bg-dark">
@@ -425,6 +473,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 toggleBookmark(anime.id);
                 bookmarkedID();
             });
+
+            const imageButton = animeCard.querySelector('#imageButton');
+            imageButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                console.log("animeButton clicked")
+
+                fetchAnimeDetail(anime.id);
+                navigate('animeDetailView');
+            })
         });
     }
 
@@ -513,7 +570,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
         // console.log("variable is: " + JSON.stringify(variables));
     
-        fetch('https://graphql.anilist.co', {
+        fetch('http://localhost:3260/api/anilist', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -572,16 +629,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const animeSection = document.getElementById("cardSectionOne")
         animeSection.innerHTML = "";
         console.log(bookmarkedAnimeList)
-        // console.log(noDups(bookmarkedAnimeList, x => x.id))
-        // console.log(removeDuplicates(bookmarkedAnimeList))
         const arrUniq = [...new Map(animeList.map(v => [v.id, v])).values()]
         console.log(arrUniq)
-        arrUniq.forEach(anime => {
+
+        arrUniq.slice(0, 6).forEach(anime => {
             const animeCard = document.createElement("div");
             animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4"; // Adjust the classes as needed
             animeCard.innerHTML = `
                 <div class="card">
-                    <a href="">
+                    <a href="" id='imageButton'>
                         <img src="${anime.coverImage.large}" class="card-img-top" alt="${anime.title.romaji}">
                     </a>
                     <div class="bg-dark">
@@ -604,15 +660,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 toggleBookmark(anime.id);
                 bookmarkedID();
             });
+
+            const imageButton = animeCard.querySelector('#imageButton');
+            imageButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                console.log("animeButton clicked")
+
+                fetchAnimeDetail(anime.id);
+                navigate('animeDetailView');
+            })
         });
-    
+        
     }
 
 
     function displayBookmarkedAnimeInBookmark(animeList) {
         const animeSection = document.getElementById("bookmarkSection");
-        // animeSection.innerHTML = ''; // Clear previous content
-        // console.log(animeList);
         if(animeList === true ){
             animeSection.innerHTML = '';
             const div = document.createElement("div");
@@ -639,7 +702,7 @@ document.addEventListener("DOMContentLoaded", () => {
             animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4"; // Adjust the classes as needed
             animeCard.innerHTML = `
                 <div class="card">
-                    <a href="" id='imageButton>
+                    <a href="" id="imageButton">
                         <img src="${anime.coverImage.large}" class="card-img-top" alt="${anime.title.romaji}">
                     </a>
                     <select class="bg-dark anime-status-select" data-anime-id="${anime.id}">
@@ -678,16 +741,17 @@ document.addEventListener("DOMContentLoaded", () => {
             const bookmarkButton = animeCard.querySelector('#bookmarkCardIcon');
             bookmarkButton.addEventListener('click', (event) => {
                 event.preventDefault();
+                console.log("Bookmark button clicked")
                 toggleBookmark(anime.id);
                 bookmarkedID();
             });
 
-
             const imageButton = animeCard.querySelector('#imageButton');
             imageButton.addEventListener('click', (event) => {
                 event.preventDefault();
+                console.log("animeButton clicked")
 
-                // displayAnimeDetail(anime.id);
+                fetchAnimeDetail(anime.id);
                 navigate('animeDetailView');
             })
         });
@@ -701,8 +765,144 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function displayAnimeDetail(animeId){
+    async function fetchAnimeDetail(IdQuery) {
+        const query = `
+            query ($id: Int) {
+                Media(id: $id, type: ANIME) {
+                    id
+                    title {
+                        romaji
+                    }
+                    description
+                    coverImage {
+                        large
+                    }
+                    characters(sort: ROLE page: 1 perPage: 24) {
+                        nodes { # Array of character nodes
+                        id
+                        name {
+                            first
+                            middle
+                            last
+                            full
+                        }
+                        image {
+                            large
+                            medium
+                        }
 
+                        }
+                    }
+                    trailer {
+                        id
+                        site
+                        thumbnail
+                    }
+                    startDate {
+                        year
+                        month
+                        day
+    				}
+                    endDate {
+                        year
+                        month
+                        day
+    				}
+                    episodes
+                    status
+                }
+            }
+            `;
+        const variables = {
+            id: IdQuery
+        };
+    
+        fetch('http://localhost:3260/api/anilist', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({
+                query: query,
+                variables: variables 
+            })
+        })
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            const anime = data.data.Media;
+            displayAnimeDetail(anime);
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+    }
+
+    function displayAnimeDetail(anime){
+        console.log(JSON.stringify(anime.characters.nodes[1]))
+        const animeDetailView = document.getElementById("animeDetailView2");
+        
+        const trailerEmbed = anime.trailer && (anime.trailer.site === "youtube" || anime.trailer.site === "dailymotion" ) ? 
+        `<iframe width="100%" height="400" src="https://www.youtube.com/embed/${anime.trailer.id}" frameborder="0" allowfullscreen></iframe>` 
+        : "<p>No trailer available</p>";
+        const EndDate = anime.endDate.year && anime.endDate.month && anime.endDate.day ?
+        `${anime.endDate.month}/${anime.endDate.day}/${anime.endDate.year}`
+        : "<p>Not Completed</p>";
+        animeDetailView.innerHTML = `
+            <div class="container mt-4">
+            <div class="row">
+                <div class="col-md-3">
+                <img src="${anime.coverImage.large}" alt="${anime.title.romaji}" class="img-fluid">
+                <button class="btn btn-primary mt-2" id="bookmarkViewButton">Add to Bookmark</button>
+                <div class="mt-2">
+                    <p><strong>Other Info:</strong></p>
+                    <p>Title: ${anime.title.romaji}</p>
+                    <p>Episodes: ${anime.episodes || 'Not Completed'}</p>
+                    <p>Start Date: ${anime.startDate.month}/${anime.startDate.day}/${anime.startDate.year}</p>
+                    <p>End Date:${EndDate}</p>
+                    <p>Status: ${anime.status}</p>
+                </div>
+                </div>
+                <div class="col-md-5">
+                <h2>Synopsis</h2>
+                <p>${anime.description}</p>
+                </div>
+                <div class="col-md-4">
+                <h2>Trailer</h2>
+                <div>
+                    ${trailerEmbed}
+                </div>
+                </div>
+                <h2 class="mt-4">Characters</h2>
+                <div class="row">
+                        ${anime.characters.nodes.map(character => `
+                            <div class="col-3 mb-3">
+                                <div class="card">
+                                    <img src="${character.image.large}" alt="${character.name.first}" class="card-img-top">
+                                    <div class="card-body text-center">
+                                        <p class="card-text">${character.name.first} ${character.name.middle || ''} ${character.name.last || ''}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        const bookmarkButton = animeDetailView.querySelector('#bookmarkViewButton');
+            bookmarkButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                toggleBookmark(anime.id);
+                bookmarkedID();
+            });
+    }
+
+    function clearAnimeDetailView() {
+        const animeDetailView = document.getElementById("animeDetailView2");
+        animeDetailView.innerHTML = ''; // Clear content to stop the video
     }
 
     document

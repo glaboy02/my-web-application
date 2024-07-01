@@ -26,7 +26,11 @@
     "start": "http-server src/frontend -p 3000 -c-1 -o -s"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.19.2",
-    "http-server": "^14.1.1"
+    "http-server": "^14.1.1",
+    "morgan": "^1.10.0",
+    "node-fetch": "^3.3.2",
+    "pouchdb": "^9.0.0"
   }
 }
