@@ -195,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function fetchTopAiringAnime() {
         const query = `
             query {
-                Page(page: 1, perPage: 6) {
+                Page(page: 1, perPage: 25) {
                     media(type: ANIME, format: TV, status: RELEASING, sort: POPULARITY_DESC) {
                         id
                         title {
@@ -223,6 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(response => response.json())
         .then(data => {
             const animeList = data.data.Page.media;
+            // console.log(animeList)
             displayTopAiringAnime(animeList);
         })
         .catch(error => {
@@ -235,7 +236,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function fetchUpcomingAnime() {
         const query = `
             query {
-                Page(perPage: 6) {
+                Page(perPage: 25) {
                     media(status: NOT_YET_RELEASED, sort: POPULARITY_DESC) {
                         id
                         title {
@@ -273,8 +274,8 @@ document.addEventListener("DOMContentLoaded", () => {
     function displayTopAiringAnime(animeList) {
         const animeSection = document.getElementById("cardSectionTwo");
         animeSection.innerHTML = ''; // Clear previous content
-
-        animeList.forEach(anime => {
+        console.log("TopAiring: "+animeList)
+        animeList.slice(0, 6).forEach(anime => {
             const animeCard = document.createElement("div");
             animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4"; // Adjust the classes as needed
             animeCard.innerHTML = `
@@ -319,7 +320,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const animeSection = document.getElementById("cardSectionThree");
         animeSection.innerHTML = ''; // Clear previous content
 
-        animeList.forEach(anime => {
+        animeList.splice(0, 6).forEach(anime => {
             const animeCard = document.createElement("div");
             animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4"; // Adjust the classes as needed
             animeCard.innerHTML = `
@@ -363,7 +364,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function fetchTopPopularAllTimeAnime() {
         const query = `
             query {
-                Page(perPage: 6) {
+                Page(perPage: 25) {
                     media(sort:  POPULARITY_DESC) {
                         id
                         title {
@@ -388,6 +389,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(response => response.json())
         .then(data => {
             const animeList = data.data.Page.media;
+            console.log("Fetched Anime List: ", animeList);
             displayTopPopularAllTimeAnime(animeList);
         })
         .catch(error => {
@@ -400,7 +402,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const animeSection = document.getElementById("cardSectionFour");
         animeSection.innerHTML = ''; // Clear previous content
 
-        animeList.forEach(anime => {
+        animeList.slice(0, 6).forEach(anime => {
             const animeCard = document.createElement("div");
             animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4"; // Adjust the classes as needed
             animeCard.innerHTML = `
@@ -432,56 +434,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const imageButton = animeCard.querySelector('#imageButton');
             imageButton.addEventListener('click', (event) => {
                 event.preventDefault();
-                console.log("animeButton clicked")
+                console.log("animeButton clicked");
 
                 fetchAnimeDetail(anime.id);
                 navigate('animeDetailView');
-            })
-        });
-    }
-
-
-    function displayTopPopularAllTimeAnime(animeList) {
-        const animeSection = document.getElementById("cardSectionFour");
-        animeSection.innerHTML = ''; // Clear previous content
-
-        animeList.forEach(anime => {
-            const animeCard = document.createElement("div");
-            animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4"; // Adjust the classes as needed
-            animeCard.innerHTML = `
-                <div class="card">
-                    <a href="" id="imageButton">
-                        <img src="${anime.coverImage.large}" class="card-img-top" alt="${anime.title.romaji}">
-                    </a>
-                    <div class="bg-dark">
-                        <div class="animeFooter">
-                            <h3 class="animeName">${anime.title.romaji}</h3>
-                            <div class="bookmark-icon">
-                                <a href="" id="bookmarkCardIcon" data-anime-id="${anime.id}">
-                                    <i class="bi bi-file-plus"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            animeSection.appendChild(animeCard);
-
-            const bookmarkButton = animeCard.querySelector('#bookmarkCardIcon');
-            bookmarkButton.addEventListener('click', (event) => {
-                event.preventDefault();
-                toggleBookmark(anime.id);
-                bookmarkedID();
             });
-
-            const imageButton = animeCard.querySelector('#imageButton');
-            imageButton.addEventListener('click', (event) => {
-                event.preventDefault();
-                console.log("animeButton clicked")
-
-                fetchAnimeDetail(anime.id);
-                navigate('animeDetailView');
-            })
         });
     }
 
