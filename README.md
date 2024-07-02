@@ -6,9 +6,11 @@ To get started with the project, follow these steps:
    git clone <repository-url>
    cd my-web-application
 2. **Install the necessary packages:**
+   ```sh
    npm install pouchdb
    npm install cors
    npm install express
    npm install node-fetch
-3. **Run Server**
+4. **Run Server**
+   ```sh
    node server.js
