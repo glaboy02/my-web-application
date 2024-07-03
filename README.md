@@ -38,7 +38,7 @@ To get started with the project, follow these steps:
       - Click on "Create New Client".
       - Application Name: Enter a name for your application.
       - Redirect URL: This is the URL to which AniList will redirect users after they authorize your application. Enter http://localhost:3260/auth/anilist/callback, this   redirect link is used in this project
-      - Click "Create".
+      - Click "Save".
 
    4. Get Client ID and Client Secret: After creating your client, you will see the Client ID and Client Secret. Note these down, as you will need them for your application.
 
