@@ -42,8 +42,9 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-dark">
                                 <li class="info" style="text-decoration: line-through"><a class="dropdown-item" href="#accountInfo" id="account" aria-disabled="true">Account Information</a></li>
-                                <li class="signin"><a class="dropdown-item" id="loginButton">Sign-in</a></li>
-                                <li class="signup"><a class="dropdown-item" id="logoutButton" style="display: none;">Log out</a></li>
+                                <li class="signin"><a class="dropdown-item" href="#offcanvasSignIn" data-bs-toggle="offcanvas" aria-controls="offcanvasSignIn">Sign-in</a></li>
+                                
+                                <li class="signup"><a class="dropdown-item" href="#offcanvasSignUp" data-bs-toggle="offcanvas" aria-controls="offcanvasSignUp">Sign-up</a></li>
                             </ul>
                         </li>
 
@@ -56,14 +57,10 @@
         </nav>
     </section>
 
-    <section id="views">  
+    <section id="views">      
         <div id="homeView" class="view">
             <h1>Welcome to Anime Organizational App</h1>
-            <p>This is the home page of my web application. 
-            Here, you can navigate to different sections of 
-            the website using the navigation bar above.
-            You will be able to bookmark anime only when logged in,
-            you will be able to click on anime to go to a facts page</p>
+            <p>This is the home page of my web application. Here, you can navigate to different sections of the website using the navigation bar above. You will be able to bookmark anime and click on anime to go to a facts page eventually</p>
             <div id="animeContainer">
 
             </div>
@@ -94,7 +91,8 @@
                     <div class="row row-cols-1 row-cols-md-5 g-4" id="cardSectionTwo">
                     <!-- end of row div  -->
                     </div>
-            </div>
+                </div>
+                
             <!-- end of sectionTwo -->
             
             <div class="sectionThree">
@@ -110,7 +108,7 @@
                 </div>
             <!-- end of sectionThree -->
             </div>
-            
+
             <div class="sectionFour">
                 <div class="row row-cols-1 row-cols-md-2">
                     <h3 class="sectionTitles text-start">All Time Most Popular Anime</h3>
@@ -125,19 +123,6 @@
             <!-- end of sectionFour -->
             </div>
         <!-- end of homeView  -->
-        </div>
-
-        <div id="viewAllTwoView" class="view">
-            <h1>Top Airing Anime</h1>
-            <div class="row row-cols-1 row-cols-md-5 g-4" id="viewAllTwoID"></div>
-        </div>
-        <div id="viewAllThreeView" class="view">
-            <h1>Top Airing Anime</h1>
-            <div class="row row-cols-1 row-cols-md-5 g-4" id="viewAllThreeID"></div>
-        </div>
-        <div id="viewAllFourView" class="view">
-            <h1>Top Airing Anime</h1>
-            <div class="row row-cols-1 row-cols-md-5 g-4" id="viewAllFourID"></div>
         </div>
 
         <div id="bookmarkView" class="view" style="display:none">
@@ -187,6 +172,40 @@
             </div>
         </div>
 
+        <div class="offcanvas offcanvas-end bg-dark" tabindex="-1" id="offcanvasSignIn" aria-labelledby="offcanvasSignInLabel">
+            <div class="offcanvas-header">
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <h1>Sign-in</h1>
+                <form action="/action_page.php">
+                    <input type="text" class="form-sign" name="" id="usernameSignIn" placeholder="Username" required>
+                    <input type="text" class="form-sign" name="" id="passwordSignIn" placeholder="Password" required>
+                    <br>
+                    <input type="submit" value="Submit" id="signInGo">
+                </form>
+            </div>
+        </div>
+        </div>
+        <div class="offcanvas offcanvas-end bg-dark" tabindex="-1" id="offcanvasSignUp" aria-labelledby="offcanvasSignUpLabel">
+            <div class="offcanvas-header">
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <h1>Sign-up</h1>
+                <form action="/action_page.php">
+                    <input type="text" class="form-sign" name="" id="emailSignUp" placeholder="Email" required>
+                    <br>
+                    <input type="text" class="form-sign" name="" id="usernameSignUp" placeholder="Username" required>
+                    <br>
+                    <input type="text" class="form-sign" name="" id="passwordSignUp" placeholder="Password" required>
+                    <br>
+                    <input type="text" class="form-sign" name="" id="confirmPasswordSignUp" placeholder="Conform Password" required>
+                    <br>
+                    <input type="submit" value="Submit" id="signUpGo">
+                </form>
+            </div>
+        </div>
     </section>
 
     <section id="footer-section">
