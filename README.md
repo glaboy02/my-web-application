@@ -28,33 +28,43 @@ To get started with the project, follow these steps:
 ## Prerequisites
    - Node.js installed on your machine.
    - AniList API client with client ID and secret.
+## Create an AniList API v2 Client
+   1. Sign Up/In: Ensure you have an AniList account. Sign in to your account on AniList.
+
+   2. Developer Settings: Navigate to the AniList Developer Settings.
+
+   3. Create New Client:
+
+      - Click on "Create New Client".
+      - Application Name: Enter a name for your application.
+      - Redirect URL: This is the URL to which AniList will redirect users after they authorize your application. Enter http://localhost:3260/auth/anilist/callback, this   redirect link is used in this project
+      - Click "Create".
+
+   4. Get Client ID and Client Secret: After creating your client, you will see the Client ID and Client Secret. Note these down, as you will need them for your application.
 
 ## Installation
 1. Clone the repository:
 
    ```sh
-   Copy code
    git clone <repository-url>
    cd my-web-application
    
 2. Install dependencies:
 
    ```sh
-   Copy code
    npm install
 
 3. Create a .env file in the root directory and add your AniList API credentials:
 
    ```makefile
-   Copy code
    ANILIST_CLIENT_ID=your_client_id
    ANILIST_CLIENT_SECRET=your_client_secret
    SESSION_SECRET=your_session_secret
+
 ## Running the Application
 1. Start the server:
 
    ```sh
-   Copy code
    node server.js
 
 2. Open your browser and navigate to http://localhost:3260.
