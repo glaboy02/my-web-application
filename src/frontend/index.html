@@ -41,7 +41,7 @@
                             Account
                             </a>
                             <ul class="dropdown-menu dropdown-menu-dark">
-                                <li class="info" style="text-decoration: line-through"><a class="dropdown-item" href="#accountInfo" id="account" aria-disabled="true">Account Information</a></li>
+                                <li class="info"><a class="dropdown-item" href="#accountInfo" id="account" aria-disabled="true">Account Information</a></li>
                                 <li class="signin"><a class="dropdown-item" id="loginButton">Sign-in</a></li>
                                 <li class="signup"><a class="dropdown-item" id="logoutButton" style="display: none;">Log out</a></li>
                             </ul>
@@ -142,6 +142,16 @@
 
         <div id="bookmarkView" class="view" style="display:none">
             <h1>Your Bookmarks</h1>
+            <div class="filter-container">
+                <select class=" bg-dark" id="filterStatus" class="form-select">
+                    <option value="all">All</option>
+                    <option value="none">None</option>
+                    <option value="watching">Watching</option>
+                    <option value="watched">Watched</option>
+                    <option value="watchLater">Watch Later</option>
+                </select>
+            </div>
+            <br>
             <div id="bookmarkSection">
                 
             </div>
@@ -151,21 +161,21 @@
             <div class="accountContainer">
                 <h1>Account information</h1>
                 <div class="account-view">
-                    <div id="emailSection">
-                        <label for="email">Email:</label>
-                        <div id="email"></div>
+                    <div id="userIDSection">
+                        <label for="userId">User ID:</label>
+                        <div id="userId"></div>
                     </div>
                     <div id="usernameSection">
                         <label for="username">Username:</label>
-                        <div id="username"></div>
+                        <center><div style="width: 50%;" id="username"></div></center>
                     </div>
                     <div id="passwordSection">
                         <label for="password">Password:</label>
-                        <div id="password"></div>
+                        <center><div style="width: 50%;" id="password">********</div></center>
                     </div>
                     <div id="numBookmarksSection">
-                        <label for="email">Number of Bookmarks:</label>
-                        <div id="email"></div>
+                        <label for="numBookmarks">Number of Bookmarks:</label>
+                        <div id="numBookmarks"></div>
                     </div>
                 </div>
             </div>

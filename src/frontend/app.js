@@ -33,47 +33,13 @@ document.addEventListener("DOMContentLoaded", () => {
     document
         .getElementById("account")
         .addEventListener("click", () => {
-            const info = document.querySelector('.info');
-
-            if(getComputedStyle(info).textDecorationLine !== 'line-through'){
-                navigate("accountView")
+            if (!isLoggedIn) {
+                alert('You need to sign in to view account information.');
+                return;
             }
+            
+            navigate("accountView")
         });
-
-    // document
-    //     .getElementById("plus")
-    //     .addEventListener("click", () => {
-    //         const info = document.querySelector('.info');
-    //         return info.removeAttribute('style');
-    //     });
-
-    // document
-    //     .getElementById("minus")
-    //     .addEventListener("click", () => {
-    //         const info = document.querySelector('.info');
-    //         return info.setAttribute(
-    //             'style',
-    //             'text-decoration: line-through'
-    //         );
-    //     });
-
-        
-    // document
-    //     .getElementById("signInGo")
-    //     .addEventListener("click", () => {
-    //         console.log('Go Button clicked')
-    //         navigate("accountView")
-    //     });
-
-    // document
-    //     .getElementById("signUpGo")
-    //     .addEventListener("click", () => navigate("accountView"));
-
-    // document.getElementById("bookmarkCardIcon").addEventListener("click", (event) => {
-    //     event.preventDefault(); // Prevent default anchor tag behavior
-    //     console.log(event.target.parentNode.parentNode.parentNode.firstElementChild.innerHTML)
-    //     navigate("accountView");
-    // });
 
     // Initialize with the home view
     navigate("homeView");
@@ -142,14 +108,14 @@ document.addEventListener("DOMContentLoaded", () => {
     function displaySearchResults(animeList) {
         console.log("animeList in display = " + JSON.stringify(animeList));
         const searchResultsContainer = document.getElementById("searchResultsContainer");
-        searchResultsContainer.innerHTML = ''; // Clear previous content
+        searchResultsContainer.innerHTML = '';
 
         animeList.forEach(anime => {
             const isBookmarked = isAnimeBookmarked(anime.id);
             const icon = isBookmarked ? "bi-file-plus-fill" : "bi-file-plus";
 
             const animeCard = document.createElement("div");
-            animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4"; // Adjust the classes as needed
+            animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4";
             animeCard.innerHTML = `
                 <div class="card">
                     <a href="" id="imageButton">
@@ -236,7 +202,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         coverImage {
                             large
                         }
-                        description
                     }
                 }
             }
@@ -312,14 +277,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function displayTopAiringAnime(animeList) {
         const animeSection = document.getElementById("cardSectionTwo");
-        animeSection.innerHTML = ''; // Clear previous content
+        animeSection.innerHTML = '';
         
         animeList.slice(0, 6).forEach(anime => {
             const isBookmarked = isAnimeBookmarked(anime.id);
             const icon = isBookmarked ? "bi-file-plus-fill" : "bi-file-plus";
 
             const animeCard = document.createElement("div");
-            animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4"; // Adjust the classes as needed
+            animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4";
             animeCard.innerHTML = `
                 <div class="card">
                     <a href="" id="imageButton">
@@ -375,7 +340,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const icon = isBookmarked ? "bi-file-plus-fill" : "bi-file-plus";
 
             const animeCard2 = document.createElement("div");
-            animeCard2.className = "col col-12 col-md-6 col-lg-2 mb-4"; // Adjust the classes as needed
+            animeCard2.className = "col col-12 col-md-6 col-lg-2 mb-4";
             animeCard2.innerHTML = `
                 <div class="card">
                     <a href="" id="imageButton">
@@ -430,14 +395,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function displayUpcomingAnime(animeList) {
         const animeSection = document.getElementById("cardSectionThree");
-        animeSection.innerHTML = ''; // Clear previous content
+        animeSection.innerHTML = '';
 
         animeList.splice(0, 6).forEach(anime => {
             const isBookmarked = isAnimeBookmarked(anime.id);
             const icon = isBookmarked ? "bi-file-plus-fill" : "bi-file-plus";
 
             const animeCard = document.createElement("div");
-            animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4"; // Adjust the classes as needed
+            animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4";
             animeCard.innerHTML = `
                 <div class="card">
                     <a href="" id="imageButton">
@@ -492,7 +457,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const icon = isBookmarked ? "bi-file-plus-fill" : "bi-file-plus";
 
             const animeCard2 = document.createElement("div");
-            animeCard2.className = "col col-12 col-md-6 col-lg-2 mb-4"; // Adjust the classes as needed
+            animeCard2.className = "col col-12 col-md-6 col-lg-2 mb-4";
             animeCard2.innerHTML = `
                 <div class="card">
                     <a href="" id="imageButton">
@@ -590,14 +555,14 @@ document.addEventListener("DOMContentLoaded", () => {
     function displayTopPopularAllTimeAnime(animeList) {
         
         const animeSection = document.getElementById("cardSectionFour");
-        animeSection.innerHTML = ''; // Clear previous content
+        animeSection.innerHTML = '';
 
         animeList.slice(0, 6).forEach(anime => {
             const isBookmarked = isAnimeBookmarked(anime.id);
             const icon = isBookmarked ? "bi-file-plus-fill" : "bi-file-plus";
 
             const animeCard = document.createElement("div");
-            animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4"; // Adjust the classes as needed
+            animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4";
             animeCard.innerHTML = `
                 <div class="card">
                     <a href="" id="imageButton">
@@ -652,7 +617,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const icon = isBookmarked ? "bi-file-plus-fill" : "bi-file-plus";
 
             const animeCard2 = document.createElement("div");
-            animeCard2.className = "col col-12 col-md-6 col-lg-2 mb-4"; // Adjust the classes as needed
+            animeCard2.className = "col col-12 col-md-6 col-lg-2 mb-4";
             animeCard2.innerHTML = `
                 <div class="card">
                     <a href="" id="imageButton">
@@ -705,23 +670,22 @@ document.addEventListener("DOMContentLoaded", () => {
         .getElementById("viewAllFour")
         .addEventListener("click", () => navigate("viewAllFourView"));
 
-    function updateAnimeStatus(animeId, status) {
-        db.get(animeId.toString()).then(function(doc) {
-            doc.status = status;
-            return db.put(doc);
-        }).catch(function(err) {
-            if (err.status === 404) {
-                db.put({
-                    _id: animeId.toString(),
-                    status: status
-                });
-            } else {
-                console.error('Error updating status:', err);
+    async function updateAnimeStatus(animeId, status) {
+        try {
+            await fetch(`http://localhost:3260/api/bookmarks/${animeId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status })
+            });
+            const bookmarkIndex = allBookmarks.findIndex(bookmark => bookmark.animeId === animeId);
+            if (bookmarkIndex !== -1) {
+                allBookmarks[bookmarkIndex].status = status;
             }
-        }).finally(() => {
-            updateStatusUI(animeId, status);
-        });
+        } catch (error) {
+            console.error('Error updating anime status:', error);
+        }
     }
+
 
     async function fetchBookmarkedAnimeData(IdQuery) {
         const query = `
@@ -731,7 +695,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     title {
                         romaji
                     }
-                    description
                     coverImage {
                         large
                     }
@@ -788,13 +751,13 @@ document.addEventListener("DOMContentLoaded", () => {
         
         const animeSection = document.getElementById("cardSectionOne")
         animeSection.innerHTML = "";
-        // console.log(bookmarkedAnimeList)
+
         const arrUniq = [...new Map(animeList.map(v => [v.id, v])).values()]
-        // console.log(arrUniq)
+
 
         arrUniq.slice(0, 6).forEach(anime => {
             const animeCard = document.createElement("div");
-            animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4"; // Adjust the classes as needed
+            animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4";
             animeCard.innerHTML = `
                 <div class="card">
                     <a href="" id='imageButton'>
@@ -823,8 +786,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const imageButton = animeCard.querySelector('#imageButton');
             imageButton.addEventListener('click', (event) => {
                 event.preventDefault();
-                // console.log("animeButton clicked")
-
                 fetchAnimeDetail(anime.id);
                 navigate('animeDetailView');
             })
@@ -855,10 +816,66 @@ document.addEventListener("DOMContentLoaded", () => {
         const animeBookmark = document.getElementById("animeBookmarkSection");
 
         const arrUniq = [...new Map(animeList.map(v => [v.id, v])).values()]
+        if(arrUniq.some(x => x.hasOwnProperty('userId'))){
+            animeList.forEach(anime => {
+                const animeCard = document.createElement("div");
+                animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4";
+                animeCard.innerHTML = `
+                    <div class="card">
+                        <a href="" id="imageButton">
+                            <img src="${anime.animeData.coverImage.large}" class="card-img-top" alt="${anime.animeData.title.romaji}">
+                        </a>
+                        <select class="bg-dark anime-status-select" data-anime-id="${anime.id}">
+                            <option value="none">None</option>
+                            <option value="watching">Watching</option>
+                            <option value="watched">Watched</option>
+                            <option value="watchLater">Watch Later</option>
+                        </select>
+                        <div class="bg-dark">
+                            <div class="animeFooter">
+                                <h3 class="animeName">${anime.animeData.title.romaji}</h3>
+                                <div class="bookmark-icon">
+                                    <a href="" id="bookmarkCardIcon" data-anime-id="${anime.animeData.id}">
+                                        <i class="bi bi-file-plus-fill"></i>
+                                    </a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                animeBookmark.appendChild(animeCard);
+    
+                const selectElement = animeCard.querySelector('.anime-status-select');
+                const bookmark = allBookmarks.find(b => b.animeId === anime.animeData.id);
+                if (bookmark && bookmark.status) {
+                    selectElement.value = bookmark.status;
+                }
 
+                // Add event listener to the select element
+                selectElement.addEventListener('change', (event) => {
+                    const selectedStatus = event.target.value;
+                    updateAnimeStatus(anime.animeData.id, selectedStatus);
+                });
+    
+                const bookmarkButton = animeCard.querySelector('#bookmarkCardIcon');
+                bookmarkButton.addEventListener('click', async (event) => {
+                    event.preventDefault();
+                    await toggleBookmark(anime.animeData.id);
+                });
+    
+                const imageButton = animeCard.querySelector('#imageButton');
+                imageButton.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    fetchAnimeDetail((anime.id || anime.animeData.id));
+                    navigate('animeDetailView');
+                })
+            });
+            return;
+        }
         arrUniq.forEach(anime => {
             const animeCard = document.createElement("div");
-            animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4"; // Adjust the classes as needed
+            animeCard.className = "col col-12 col-md-6 col-lg-2 mb-4";
             animeCard.innerHTML = `
                 <div class="card">
                     <a href="" id="imageButton">
@@ -886,11 +903,10 @@ document.addEventListener("DOMContentLoaded", () => {
             animeBookmark.appendChild(animeCard);
 
             const selectElement = animeCard.querySelector('.anime-status-select');
-            db.get(anime.id.toString()).then(function(doc) {
-                if (doc.status) {
-                    selectElement.value = doc.status;
-                }
-            });
+            const bookmark = allBookmarks.find(b => b.animeId === anime.id);
+            if (bookmark && bookmark.status) {
+                selectElement.value = bookmark.status;
+            }
 
             // Add event listener to the select element
             selectElement.addEventListener('change', (event) => {
@@ -901,16 +917,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const bookmarkButton = animeCard.querySelector('#bookmarkCardIcon');
             bookmarkButton.addEventListener('click', async (event) => {
                 event.preventDefault();
-                // console.log("Bookmark button clicked")
                 await toggleBookmark(anime.id);
             });
 
             const imageButton = animeCard.querySelector('#imageButton');
             imageButton.addEventListener('click', (event) => {
                 event.preventDefault();
-                // console.log("animeButton clicked")
-
-                fetchAnimeDetail(anime.id);
+                fetchAnimeDetail((anime.id || anime.animeData.id));
                 navigate('animeDetailView');
             })
         });
@@ -961,7 +974,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         year
                         month
                         day
-    				}
+    			    }
                     endDate {
                         year
                         month
@@ -1000,7 +1013,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function displayAnimeDetail(anime){
-        // console.log(JSON.stringify(anime.characters.nodes[1]))
         const animeDetailView = document.getElementById("animeDetailView2");
         
         const trailerEmbed = anime.trailer && (anime.trailer.site === "youtube" || anime.trailer.site === "dailymotion" ) ? 
@@ -1060,7 +1072,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function clearAnimeDetailView() {
         const animeDetailView = document.getElementById("animeDetailView2");
-        animeDetailView.innerHTML = ''; // Clear content to stop the video
+        animeDetailView.innerHTML = '';
     }
 
     document
@@ -1097,6 +1109,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         Viewer {
                             id
                             name
+                            
                         }
                     }
                 `
@@ -1108,6 +1121,9 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById('loginButton').style.display = 'none';
             document.getElementById('logoutButton').style.display = 'block';
             fetchBookmarks();
+
+            document.getElementById('userId').innerHTML = `<b>${data.data.Viewer.id}</b>`;
+            document.getElementById('username').innerText = data.data.Viewer.name;
         } else {
             isLoggedIn = false;
             document.getElementById('loginButton').style.display = 'block';
@@ -1124,7 +1140,6 @@ document.addEventListener("DOMContentLoaded", () => {
         fetchAnimeDetail();
         fetchAnimeData();
     });
-
 
     async function toggleBookmark(animeId) {
         if (!isLoggedIn) {
@@ -1156,11 +1171,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const response = await fetch('http://localhost:3260/api/bookmarks');
             const bookmarks = await response.json();
             allBookmarks = bookmarks;
-            // console.log("bookmarks data"+JSON.stringify(bookmarks));
             const animeDataPromises = bookmarks.map(bookmark => fetchBookmarkedAnimeData(bookmark.animeId));
             const animeData = await Promise.all(animeDataPromises);
-            // console.log("anime data"+JSON.stringify(animeData));
-            
+            document.getElementById('numBookmarks').innerHTML = `<b>${allBookmarks.length}</b>`
             displayBookmarkedAnime(animeData);
             displayBookmarkedAnimeInBookmark(animeData);
         } catch (error) {
@@ -1170,4 +1183,16 @@ document.addEventListener("DOMContentLoaded", () => {
     function isAnimeBookmarked(animeId) {
         return allBookmarks.some(bookmark => bookmark.animeId === animeId);
     }
+
+    // Add event listener to the filter dropdown
+    const filterStatus = document.getElementById("filterStatus");
+    filterStatus.addEventListener("change", function() {
+        const selectedStatus = this.value;
+        const filteredAnime = allBookmarks.filter(bookmark => {
+            if (selectedStatus === "all") return true;
+            return bookmark.status === selectedStatus;
+        });
+        
+        displayBookmarkedAnimeInBookmark(filteredAnime);
+    });
 });

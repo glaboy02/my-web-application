@@ -60,21 +60,23 @@ app.post('/api/bookmarks', async (req, res) => {
     if (!req.session.user) {
         return res.status(401).json({ error: 'Unauthorized' });
     }
-    const { animeId, animeData } = req.body;
+    const { animeId, animeData, status = 'none' } = req.body;
     const docId = `${req.session.user.id}_${animeId}`;
     try {
         const existingDoc = await db.get(docId).catch(err => null);
+        if (existingDoc) {
+            return res.status(409).json({ error: 'Bookmark already exists' });
+        }
         const doc = {
             _id: docId,
             userId: req.session.user.id,
             animeId,
             animeData,
-            _rev: existingDoc ? existingDoc._rev : undefined
+            status
         };
         await db.put(doc);
         res.json(doc);
     } catch (error) {
-        console.error('Error saving bookmark:', error);
         res.status(500).json({ error: 'Error saving bookmark' });
     }
 });
@@ -87,7 +89,6 @@ app.get('/api/bookmarks', async (req, res) => {
         const result = await db.find({ selector: { userId: req.session.user.id } });
         res.json(result.docs);
     } catch (error) {
-        console.error('Error fetching bookmarks:', error);
         res.status(500).json({ error: 'Error fetching bookmarks' });
     }
 });
@@ -107,6 +108,22 @@ app.get('/api/bookmarks/:animeId', async (req, res) => {
             console.error('Error fetching bookmark:', error);
             res.status(500).json({ error: 'Error fetching bookmark' });
         }
+    }
+});
+
+app.put('/api/bookmarks/:animeId', async (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+    try {
+        const { status } = req.body;
+        const docId = `${req.session.user.id}_${req.params.animeId}`;
+        const doc = await db.get(docId);
+        doc.status = status;
+        await db.put(doc);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: 'Error updating bookmark' });
     }
 });
 
@@ -165,6 +182,7 @@ app.get('/auth/anilist/callback', async (req, res) => {
                         Viewer {
                             id
                             name
+                            
                         }
                     }
                 `,
